@@ -1,7 +1,6 @@
 import { TRPCError } from '@trpc/server';
 import { t } from '../trpc';
 
-
 export const superAdminMiddleware = t.middleware(async ({ ctx, next }) => {
   const SuperAdminSecret = ctx.headers.get('SuperAdminSecret');
 
@@ -17,5 +16,3 @@ export const superAdminMiddleware = t.middleware(async ({ ctx, next }) => {
 
 // Super Admin Procedure
 export const superAdminProcedure = t.procedure.use(superAdminMiddleware);
-
-

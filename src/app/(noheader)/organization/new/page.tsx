@@ -16,7 +16,7 @@ export const generateMetadata = () =>
 const CreateNewOrganization: React.FC = () => {
   return (
     <div className="relative flex min-h-screen w-full items-center justify-center">
-      <CreateNewOrgFrom state="new" />
+      <CreateNewOrgFrom />
     </div>
   );
 };

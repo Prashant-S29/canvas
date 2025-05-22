@@ -6,7 +6,7 @@ import { publicProcedure } from '../middleware';
 export const postRouter = createTRPCRouter({
   hello: publicProcedure
     .input(z.object({ text: z.string() }))
-    .query(({ input, ctx }) => {
+    .query(({ input }) => {
       return {
         greeting: `Hello ${input.text}`,
       };

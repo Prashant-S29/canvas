@@ -25,11 +25,7 @@ interface TeamFomDialogProps {
   trigger?: React.ReactNode;
 }
 
-export const TeamFomDialog: React.FC<TeamFomDialogProps> = ({
-  state,
-  data,
-  trigger,
-}) => {
+export const TeamFomDialog: React.FC<TeamFomDialogProps> = ({ trigger }) => {
   const [open, setOpen] = useState(false);
 
   return (

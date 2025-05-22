@@ -5,8 +5,10 @@ import { db } from '../db';
 
 export const getSessionInfo = async ({
   userId,
-  userMail,
-}: { userId: string; userMail: string }) => {
+}: {
+  userId: string;
+  userMail: string;
+}) => {
   const user = db.query.user.findFirst({
     where: (table) => eq(table.id, userId),
     columns: {

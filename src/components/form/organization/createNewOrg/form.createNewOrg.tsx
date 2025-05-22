@@ -37,14 +37,8 @@ import { Textarea } from '~/components/ui/textarea';
 // config
 import { defaultValues } from './formConfig.createNewOrg';
 
-interface CreateNewOrgFromProps {
-  state?: 'new' | 'switch:new';
-}
-
-export const CreateNewOrgFrom: React.FC<CreateNewOrgFromProps> = ({
-  state,
-}) => {
-  const { data: session, refetch } = authClient.useSession();
+export const CreateNewOrgFrom: React.FC = () => {
+  const { refetch } = authClient.useSession();
 
   const router = useRouter();
 

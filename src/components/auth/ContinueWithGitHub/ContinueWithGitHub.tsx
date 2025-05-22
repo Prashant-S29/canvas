@@ -33,7 +33,7 @@ export const ContinueWithGitHub: React.FC = () => {
         toast.success('Successfully logged in with GitHub!');
       }
       // biome-ignore lint/suspicious/noExplicitAny: fuck you
-    } catch (error: any) {
+    } catch (_error: any) {
       toast.error('An unexpected error occurred');
     } finally {
       setLoading(false);

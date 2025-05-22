@@ -1,5 +1,5 @@
 module.exports = {
-  siteUrl: "https://canvas-alpha-ten.vercel.app",
+  siteUrl: 'https://canvas-alpha-ten.vercel.app',
   generateRobotsTxt: true,
-  exclude: ["/api*"],
+  exclude: ['/api*'],
 };

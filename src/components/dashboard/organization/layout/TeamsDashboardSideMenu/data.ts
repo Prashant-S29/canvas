@@ -17,7 +17,7 @@ export const SideMenuItems: SideMenuItemProps[] = [
   },
   {
     label: 'Projects',
-    href: 'teams',
+    href: 'projects',
     icon_filled: DashboardIcons.TeamFilled,
     icon_outline: DashboardIcons.TeamOutline,
   },

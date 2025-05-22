@@ -1,10 +1,8 @@
 ### Notes
 
 <!-- work in progress -->
-- brainstorm on expire invitation??
 
-<!-- FIXME: -->
- - fix the active state in team dashboard side menu
+- brainstorm on expire invitation??
 
 <!-- things to implement as whole -->
 
@@ -13,3 +11,5 @@
 | add optimistic updates and invalidate the cache on updates | no     |
 | properly set middleware for all the mutations              | no     |
 | add middleware                                             | no     |
+| verify organization flow                                   | no     |
+| delete my account                                          | no     |

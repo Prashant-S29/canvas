@@ -189,10 +189,10 @@ export const PendingInvitationTable: React.FC<
                   </TableCell>
                 </TableRow>
               )}
-              <TableRow>
+              <TableRow className="py-3 bg-transparent! group-hover:bg-transparent">
                 <TableCell
                   colSpan={PendingInvitationTableConfig.length}
-                  className="border-b py-3 bg-transparent! group-hover:bg-transparent"
+                  className="border-b "
                 >
                   <InviteMemberFormDialog
                     teamSlug={teamSlug}
@@ -213,10 +213,6 @@ export const PendingInvitationTable: React.FC<
         </TableBody>
       </Table>
       <div className="flex items-center justify-end p-2">
-        {/* <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{' '}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
-        </div> */}
         <div className="flex items-center space-x-2">
           <div className="space-x-2">
             <Button

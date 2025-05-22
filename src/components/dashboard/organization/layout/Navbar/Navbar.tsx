@@ -9,12 +9,9 @@ import { slugToString } from '~/utils/slugHandler';
 
 // components
 import { NavbarUserProfile, ThemeToggler } from '~/components/common';
-import { authClient } from '~/lib/auth-client';
 
 export const Navbar: React.FC = () => {
   const params = useParams<{ slug: string }>();
-
-  const { data: session, isPending } = authClient.useSession();
 
   return (
     <header className="fixed top-0 z-50 flex h-[100px] w-full items-center justify-between px-[200px]">

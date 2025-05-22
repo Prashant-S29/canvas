@@ -1,0 +1,2 @@
+CREATE TYPE "public"."invitation_status" AS ENUM('PENDING', 'ACCEPTED', 'REJECTED');--> statement-breakpoint
+ALTER TABLE "team_user" ADD COLUMN "invitation_status" "invitation_status" DEFAULT 'PENDING' NOT NULL;

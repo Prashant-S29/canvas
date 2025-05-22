@@ -1,0 +1,41 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1747574359942,
+      "tag": "0000_why_this_is_so_hard",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1747574908918,
+      "tag": "0001_dropped_role_from_user",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1747575444708,
+      "tag": "0002_add_role_to_user",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1747765129987,
+      "tag": "0003_add_invitation_status_to_team_user",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1747766360707,
+      "tag": "0004_add_team_invitation_and_dropped_status_from_team_user",
+      "breakpoints": true
+    }
+  ]
+}

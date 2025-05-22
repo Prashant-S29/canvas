@@ -1,0 +1,41 @@
+# Root editor config
+root = true
+
+# Default settings for all files
+[*]
+charset = utf-8
+end_of_line = lf
+indent_style = space
+indent_size = 2
+insert_final_newline = true
+trim_trailing_whitespace = true
+max_line_length = 80
+
+# Markdown files: don't trim trailing whitespace (needed for MD formatting)
+[*.md]
+trim_trailing_whitespace = false
+
+# JSON files: still 2-space indent
+[*.json]
+indent_style = space
+indent_size = 2
+
+# YAML files (if any): 2 spaces too
+[*.{yml,yaml}]
+indent_style = space
+indent_size = 2
+
+# JavaScript, TypeScript, JSX, TSX: 2 spaces
+[*.{js,jsx,ts,tsx}]
+indent_style = space
+indent_size = 2
+
+# HTML and CSS: 2 spaces
+[*.{html,css,scss}]
+indent_style = space
+indent_size = 2
+
+# Env files: treat carefully, no trimming!
+[.env]
+trim_trailing_whitespace = false
+insert_final_newline = true

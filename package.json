@@ -17,7 +17,8 @@
     "preview": "next build && next start",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "backup": "git add . && git commit -m \"$npm_config_message\" && git push origin internal-backup"
+    "backup": "git add . && git commit -m \"$npm_config_message\" && git push origin internal-backup",
+    "postbuild": "next-sitemap --config next-sitemap.config.cjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
@@ -48,6 +49,7 @@
     "input-otp": "^1.4.2",
     "lucide-react": "^0.510.0",
     "next": "^15.2.3",
+    "next-sitemap": "^4.2.3",
     "next-themes": "^0.4.6",
     "nodemailer": "^7.0.3",
     "postgres": "^3.4.4",

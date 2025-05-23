@@ -1,5 +1,5 @@
 import type React from 'react';
-import { generateSeo } from '~/utils';
+import { checkAuth, generateSeo } from '~/utils';
 
 export const generateMetadata = () =>
   generateSeo({
@@ -9,6 +9,12 @@ export const generateMetadata = () =>
   });
 
 const Settings: React.FC = async () => {
+  await checkAuth({
+    redirectTo: '/login',
+    role: 'ORG_ADMIN',
+    isOrgDashboard: true,
+  });
+
   return (
     <div className="relative flex h-screen w-full pt-[100px]">
       <h1 className="text-xl font-semibold">Settings</h1>

@@ -1,19 +1,18 @@
 import { headers } from 'next/headers';
-import { redirect } from 'next/navigation';
 import type React from 'react';
 
 import { auth } from '~/lib/auth';
 
 // utils
-import { generateSeo } from '~/utils';
+import { checkAuth, generateSeo } from '~/utils';
 import { slugToString } from '~/utils/slugHandler';
 
 // icons
 import { AddIcon } from 'public/icons';
 
+// components
 import { AllTeamsGrid } from '~/components/dashboard/organization/common';
 import { TeamFomDialog } from '~/components/form/team';
-// components
 import { Button } from '~/components/ui/button';
 
 export const generateMetadata = () =>
@@ -24,13 +23,15 @@ export const generateMetadata = () =>
   });
 
 const Teams: React.FC = async () => {
+  await checkAuth({
+    redirectTo: '/login',
+    role: 'ORG_ADMIN',
+    isOrgDashboard: true,
+  });
+
   const session = await auth.api.getSession({
     headers: await headers(),
   });
-
-  if (!session?.session.orgSlug) {
-    redirect('/');
-  }
 
   return (
     <div className="relative min-h-screen w-full pb-5 pt-[100px]">

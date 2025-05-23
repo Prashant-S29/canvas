@@ -2,14 +2,13 @@ import { headers } from 'next/headers';
 import Image from 'next/image';
 import type React from 'react';
 
-import { Button } from '~/components/ui/button';
 import { auth } from '~/lib/auth';
-// utils
-import { generateSeo } from '~/utils';
 
-// // components
-// import { DeleteYourAccountCTA } from '~/components/dashboard/feature';
-// import { OrganizationVerificationCTA } from '~/components/dashboard/organization/feature';
+// utils
+import { checkAuth, generateSeo } from '~/utils';
+
+// components
+import { Button } from '~/components/ui/button';
 
 export const generateMetadata = () =>
   generateSeo({
@@ -19,6 +18,12 @@ export const generateMetadata = () =>
   });
 
 const Account: React.FC = async () => {
+  await checkAuth({
+    redirectTo: '/login',
+    role: 'ORG_ADMIN',
+    isOrgDashboard: true,
+  });
+
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -95,24 +100,6 @@ const Account: React.FC = async () => {
           </Button>
         </section>
       </section>
-
-      {/* <section>
-        <h3 className="mt-5 text-base font-medium">
-          Beta Features (experimental){" "}
-        </h3>
-        <div className="mb-2 h-[0.5px] w-full bg-primary/10" />
-        <section className="flex items-center justify-between gap-2">
-          <div className="">
-            <h2 className="text-sm font-medium">
-              New features that are available as part of our limited beta
-              program
-            </h2>
-            <p className="text-xs text-primary/70">
-              There are currently no beta features available
-            </p>
-          </div>
-        </section>
-      </section> */}
     </div>
   );
 };

@@ -1,7 +1,10 @@
+import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
 import type React from 'react';
 
 // components
 import { ContinueWithGitHub } from '~/components/auth';
+import { auth } from '~/lib/auth';
 import { generateSeo } from '~/utils';
 
 export const generateMetadata = () =>
@@ -11,7 +14,15 @@ export const generateMetadata = () =>
     url: '/signup',
   });
 
-const SignUp: React.FC = () => {
+const SignUp: React.FC = async () => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (session?.user.id) {
+    redirect('/dashboard');
+  }
+
   return (
     <div className="relative flex h-screen w-full items-center    justify-center">
       <section className="flex flex-col gap-3 items-center">

@@ -20,24 +20,18 @@ export const ContinueWithGitHub: React.FC = () => {
 
   const handleGitHubLogin = async () => {
     setLoading(true);
-    try {
-      const res = await authClient.signIn.social({
+
+    toast.promise(
+      authClient.signIn.social({
         provider: 'github',
         callbackURL: '/onboarding',
-      });
-
-      if (res.error) {
-        toast.error(`GitHub Login Failed: ${res.error.message}`);
-        console.error('GitHub signIn error:', res.error);
-      } else {
-        toast.success('Successfully logged in with GitHub!');
-      }
-      // biome-ignore lint/suspicious/noExplicitAny: fuck you
-    } catch (_error: any) {
-      toast.error('An unexpected error occurred');
-    } finally {
-      setLoading(false);
-    }
+      }),
+      {
+        loading: 'Logging in...',
+        success: 'Successfully logged in!',
+        error: 'An unexpected error occurred',
+      },
+    );
   };
 
   if (!mounted) return null;

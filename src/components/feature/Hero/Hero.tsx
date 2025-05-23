@@ -61,7 +61,7 @@ export const Hero: React.FC = async () => {
           </>
         ) : (
           <Button asChild>
-            <Link href="/signup">Start your project</Link>
+            <Link href="/dashboard">Start your project</Link>
           </Button>
         )}
       </section>

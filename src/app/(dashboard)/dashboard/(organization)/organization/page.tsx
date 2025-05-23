@@ -1,17 +1,19 @@
+import { headers } from 'next/headers';
 import type React from 'react';
-
-// auth
-// import { auth } from "~/server/auth";
 
 // utils
 import { slugToString } from '~/utils/slugHandler';
 
-import { headers } from 'next/headers';
-// components
-// import { OrgVerificationStatus } from "~/components/dashboard/organization/common";
 import { auth } from '~/lib/auth';
+import { checkAuth } from '~/utils';
 
 const Dashboard: React.FC = async () => {
+  await checkAuth({
+    redirectTo: '/login',
+    role: 'ORG_ADMIN',
+    isOrgDashboard: true,
+  });
+
   const session = await auth.api.getSession({
     headers: await headers(),
   });

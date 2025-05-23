@@ -34,7 +34,7 @@ export const Hero: React.FC = async () => {
         your online courses, projects, and more.
       </p>
 
-      {/* {JSON.stringify(session)} */}
+      {JSON.stringify(session)}
 
       <section className="mt-5 flex items-center justify-center gap-3">
         {session?.user.id ? (

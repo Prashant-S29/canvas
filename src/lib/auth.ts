@@ -10,8 +10,8 @@ export const auth = betterAuth({
     customSession(async ({ user, session }) => {
       // get org slug
       const sessionInfo = await getSessionInfo({
-        userId: user.id,
         userMail: user.email,
+        userId: user.id,
       });
       return {
         user,
@@ -19,6 +19,7 @@ export const auth = betterAuth({
           ...session,
           role: sessionInfo.role,
           orgSlug: sessionInfo.orgSlug,
+          teamSlug: sessionInfo.teamSlug,
         },
       };
     }),

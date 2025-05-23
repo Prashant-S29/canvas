@@ -10,7 +10,7 @@ export const generateMetadata = () =>
 
 const Settings: React.FC = async () => {
   await checkAuth({
-    redirectTo: '/login',
+    redirectTo: '/signup',
     role: 'ORG_ADMIN',
     isOrgDashboard: true,
   });

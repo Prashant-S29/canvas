@@ -1,0 +1,2 @@
+ALTER TABLE "team_user" ADD COLUMN "org_slug" text NOT NULL;--> statement-breakpoint
+ALTER TABLE "team_user" ADD CONSTRAINT "team_user_org_slug_organization_slug_fk" FOREIGN KEY ("org_slug") REFERENCES "public"."organization"("slug") ON DELETE cascade ON UPDATE cascade;

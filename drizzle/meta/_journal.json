@@ -36,6 +36,13 @@
       "when": 1747766360707,
       "tag": "0004_add_team_invitation_and_dropped_status_from_team_user",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1748025135705,
+      "tag": "0005_magenta_the_hood",
+      "breakpoints": true
     }
   ]
 }

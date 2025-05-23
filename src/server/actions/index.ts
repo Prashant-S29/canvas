@@ -4,30 +4,37 @@ import { eq } from 'drizzle-orm';
 import { db } from '../db';
 
 export const getSessionInfo = async ({
+  userMail,
   userId,
 }: {
-  userId: string;
   userMail: string;
+  userId: string;
 }) => {
-  const user = db.query.user.findFirst({
+  const teamUser = await db.query.team_user.findFirst({
+    where: (table) => eq(table.userMail, userMail),
+    columns: {
+      teamSlug: true,
+      role: true,
+    },
+  });
+
+  const org = await db.query.organization.findFirst({
+    where: (table) => eq(table.org_admin_id, userId),
+    columns: {
+      slug: true,
+    },
+  });
+
+  const user = await db.query.user.findFirst({
     where: (table) => eq(table.id, userId),
     columns: {
       role: true,
     },
   });
 
-  const org = db.query.organization.findFirst({
-    where: (table) => eq(table.org_admin_id, userId),
-    columns: {
-      slug: true,
-      is_verified: true,
-    },
-  });
-
-  const result = await Promise.all([user, org]);
-
   return {
-    role: result[0]?.role,
-    orgSlug: result[1]?.slug,
+    role: user?.role,
+    orgSlug: org?.slug,
+    teamSlug: teamUser?.teamSlug,
   };
 };

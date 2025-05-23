@@ -4,6 +4,10 @@
 
 <!-- things to implement as whole -->
 
+<!-- TODO: -->
+
+- fix get session in auth.ts file, you are making 3 db call to get session data
+
 | Work                                                       | Status |
 | ---------------------------------------------------------- | ------ |
 | add optimistic updates and invalidate the cache on updates | no     |

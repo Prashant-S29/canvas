@@ -76,6 +76,7 @@ export const teamRouter = createTRPCRouter({
             invitedBy: ctx.session.user.email,
             teamSlug: createdSlug,
             userMail: ctx.session.user.email,
+            orgSlug: ctx.session.session.orgSlug,
           });
 
           return {

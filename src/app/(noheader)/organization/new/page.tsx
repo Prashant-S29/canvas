@@ -1,5 +1,8 @@
+import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
 import type React from 'react';
 
+import { auth } from '~/lib/auth';
 // utils
 import { generateSeo } from '~/utils';
 
@@ -13,7 +16,14 @@ export const generateMetadata = () =>
     url: 'https://canvas.com/organization/new',
   });
 
-const CreateNewOrganization: React.FC = () => {
+const CreateNewOrganization: React.FC = async () => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (session?.session.orgSlug) {
+    redirect('/dashboard');
+  }
   return (
     <div className="relative flex min-h-screen w-full items-center justify-center">
       <CreateNewOrgFrom />

@@ -1,5 +1,6 @@
 import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { createSelectSchema } from 'drizzle-zod';
+import { organization } from './org';
 import { role } from './role';
 import { team } from './team';
 import { user } from './user';
@@ -12,6 +13,13 @@ export const team_user = pgTable('team_user', {
   teamSlug: text('team_slug')
     .notNull()
     .references(() => team.slug, {
+      onDelete: 'cascade',
+      onUpdate: 'cascade',
+    }),
+
+  orgSlug: text('org_slug')
+    .notNull()
+    .references(() => organization.slug, {
       onDelete: 'cascade',
       onUpdate: 'cascade',
     }),

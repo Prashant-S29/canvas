@@ -24,7 +24,7 @@ export const ContinueWithGitHub: React.FC = () => {
     toast.promise(
       authClient.signIn.social({
         provider: 'github',
-        callbackURL: '/onboarding',
+        callbackURL: `${process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : process.env.BASE_URL}/onboarding`,
       }),
       {
         loading: 'Logging in...',

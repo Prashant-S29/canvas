@@ -13,6 +13,7 @@ import { toast } from 'sonner';
 // components
 import { Button } from '~/components/ui/button';
 import { useMounted } from '~/hooks/useMounted';
+import { env } from '~/env';
 
 export const ContinueWithGitHub: React.FC = () => {
   const [loading, setLoading] = useState(false);
@@ -24,7 +25,7 @@ export const ContinueWithGitHub: React.FC = () => {
     toast.promise(
       authClient.signIn.social({
         provider: 'github',
-        callbackURL: `${process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : process.env.BASE_URL}/onboarding`,
+        callbackURL: `${process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : env.NEXT_PUBLIC_BASE_URL}/onboarding`,
       }),
       {
         loading: 'Logging in...',

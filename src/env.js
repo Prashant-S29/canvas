@@ -34,9 +34,12 @@ export const env = createEnv({
     EMAIL_PASS: z.string().min(1, {
       message: 'EMAIL_PASS must be set',
     }),
+
   },
 
-  client: {},
+  client: {
+    NEXT_PUBLIC_BASE_URL: z.string().url(),
+  },
 
   runtimeEnv: {
     DATABASE_URL: process.env.DATABASE_URL,
@@ -51,6 +54,8 @@ export const env = createEnv({
     EMAIL_PORT: process.env.EMAIL_PORT,
     EMAIL_USER: process.env.EMAIL_USER,
     EMAIL_PASS: process.env.EMAIL_PASS,
+
+    NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
   },
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,
 

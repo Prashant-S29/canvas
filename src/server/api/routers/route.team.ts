@@ -4,7 +4,7 @@ import { CreateNewTeamFormSchema } from '~/components/form/team';
 // middleware
 import { protectedProcedure } from '../middleware';
 
-import { desc, eq } from 'drizzle-orm';
+import { and, desc, eq } from 'drizzle-orm';
 import { z } from 'zod';
 import { InviteMemberSchema } from '~/schema/form/formSchema.inviteMember';
 import { team } from '~/server/db/schema/team';
@@ -14,6 +14,9 @@ import { slugToString, stringToSlug } from '~/utils';
 import { createTRPCRouter, t } from '../trpc';
 import { mailRouter } from './route.mail';
 // import { createCaller } from '../root';
+
+import ShortUniqueId from 'short-unique-id';
+import { user } from '~/server/db/schema/user';
 
 const createCaller = t.createCallerFactory(mailRouter);
 
@@ -48,6 +51,12 @@ export const teamRouter = createTRPCRouter({
             };
           }
 
+          // generate invitation code
+          const { randomUUID } = new ShortUniqueId({
+            length: 6,
+            dictionary: 'number',
+          });
+
           // Insert the new team
           const insertedTeam = await tx
             .insert(team)
@@ -55,7 +64,7 @@ export const teamRouter = createTRPCRouter({
               slug: teamSlug,
               name: input.name,
               description: input.description,
-              invitationCode: teamSlug,
+              invitationCode: randomUUID(),
               org_slug: ctx.session.session.orgSlug,
             })
             .returning({ slug: team.slug });
@@ -237,12 +246,21 @@ export const teamRouter = createTRPCRouter({
           };
         }
 
-        // creates in member invitation
+        if (!ctx.session.session.orgSlug) {
+          return {
+            data: null,
+            message: 'Organization not found',
+            error: 'Organization not found',
+          };
+        }
+
+        // creates new member invitation
         const memberInvitationRes = await ctx.db
           .insert(team_invitation)
           .values({
             ...input,
             invitedBy: ctx.session.user.email,
+            orgSlug: ctx.session.session.orgSlug,
           })
           .returning({
             id: team_invitation.id,
@@ -256,7 +274,7 @@ export const teamRouter = createTRPCRouter({
           };
         }
 
-        // // send invitation code via email
+        // send invitation code via email
         const mailRes = await caller.sendTeamInvitationMail({
           senderName: ctx.session.user.name ?? '<no-name>',
           senderMail: ctx.session.user.email ?? '<no-email>',
@@ -356,5 +374,83 @@ export const teamRouter = createTRPCRouter({
           message: 'Something went wrong',
         };
       }
+    }),
+
+  acceptInvitation: protectedProcedure
+    .input(z.object({ invitationCode: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      // get team using invitation code
+      const getTeamRes = await ctx.db
+        .select()
+        .from(team)
+        .where(eq(team.invitationCode, input.invitationCode))
+        .limit(1)
+        .execute();
+
+      if (!getTeamRes.length || !getTeamRes?.[0]?.slug) {
+        return {
+          data: null,
+          message: 'Invitation not found',
+          error: 'Invitation not found',
+        };
+      }
+
+      // if team found, check if the user in invited or not
+      const getInvitationRes = await ctx.db
+        .select()
+        .from(team_invitation)
+        .where(
+          and(
+            eq(team_invitation.teamSlug, getTeamRes[0].slug),
+            eq(team_invitation.userMail, ctx.session.user.email),
+          ),
+        )
+        .limit(1)
+        .execute();
+
+      if (!getInvitationRes.length || !getInvitationRes?.[0]?.id) {
+        return {
+          data: null,
+          message: 'You are not invited to this team',
+          error: 'You are not invited to this team',
+        };
+      }
+
+      // if team found and user is invited, accept the invitation
+      const acceptInvitationRes = await ctx.db
+        .insert(team_user)
+        .values({
+          role: getInvitationRes?.[0].role,
+          invitedBy: getInvitationRes?.[0].invitedBy,
+          teamSlug: getTeamRes[0].slug,
+          userMail: ctx.session.user.email,
+          orgSlug: getTeamRes[0].org_slug,
+        })
+        .returning({
+          id: team_user.id,
+          slug: team_user.teamSlug,
+        });
+
+      if (!acceptInvitationRes[0]?.id) {
+        return {
+          data: null,
+          message: 'Failed to accept invitation',
+          error: 'Failed to accept invitation',
+        };
+      }
+
+      // update the role in user table
+      await ctx.db
+        .update(user)
+        .set({
+          role: getInvitationRes?.[0].role,
+        })
+        .where(eq(user.email, ctx.session.user.email));
+
+      return {
+        data: acceptInvitationRes[0],
+        message: 'Invitation accepted successfully',
+        error: null,
+      };
     }),
 });

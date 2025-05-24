@@ -43,6 +43,13 @@
       "when": 1748025135705,
       "tag": "0005_magenta_the_hood",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1748101206653,
+      "tag": "0006_added_orgSlug_on_team_invitation",
+      "breakpoints": true
     }
   ]
 }

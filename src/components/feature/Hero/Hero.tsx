@@ -52,11 +52,27 @@ export const Hero: React.FC = async () => {
                 </Button>
               </>
             ) : (
-              <Button asChild variant="default">
-                <Link href="/onboarding">
-                  Continue Onboarding <RightArrowIcon />
-                </Link>
-              </Button>
+              <>
+                {session.session.teamSlug ? (
+                  <>
+                    <Button asChild variant="default">
+                      <Link href="/dashboard/organization">
+                        Continue with {slugToString(session.session.teamSlug)}{' '}
+                        <RightArrowIcon />
+                      </Link>
+                    </Button>
+                    <Button asChild variant="secondary">
+                      <Link href="/teams/join">Join a Team</Link>
+                    </Button>
+                  </>
+                ) : (
+                  <Button asChild variant="default">
+                    <Link href="/onboarding">
+                      Continue Onboarding <RightArrowIcon />
+                    </Link>
+                  </Button>
+                )}
+              </>
             )}
           </>
         ) : (

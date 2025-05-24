@@ -16,6 +16,16 @@ export const orgRouter = createTRPCRouter({
           where: eq(organization.slug, input.slug),
         });
 
+        // check is an org is already registered with this email
+        if (existingOrg?.org_admin_id === ctx.session.user.id) {
+          console.error('[ONE ORG PER USER] Organization already exists');
+          return {
+            data: null,
+            error: 'Organization already exists',
+            message: 'Only one organization can be created per user.',
+          };
+        }
+
         if (existingOrg) {
           console.error('Organization already exists');
           return {

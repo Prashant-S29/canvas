@@ -14,8 +14,9 @@ import {
 } from '~/schema/form/formSchema.onboardingForm';
 
 // icons
-import { InfoIcon } from 'public/icons';
+import { InfoIcon, LoadingIcon, RightArrowIcon } from 'public/icons';
 
+import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { Button } from '~/components/ui/button';
 // components
@@ -27,12 +28,21 @@ import {
   FormMessage,
 } from '~/components/ui/form';
 import { InputOTP, InputOTPSlot } from '~/components/ui/input-otp';
+import { authClient } from '~/lib/auth-client';
+import { api } from '~/trpc/react';
+import { slugToString } from '~/utils';
 
 interface OnboardingFormProps {
   state?: 'join' | 'onboarding';
 }
 
 export const OnboardingForm: React.FC<OnboardingFormProps> = ({ state }) => {
+  const { data: session, isPending, refetch } = authClient.useSession();
+  const router = useRouter();
+
+  // mutation
+  const acceptInvitationMutation = api.team.acceptInvitation.useMutation();
+
   // form
   const form = useForm<OnboardingFormSchemaType>({
     resolver: zodResolver(OnboardingFormSchema),
@@ -45,18 +55,36 @@ export const OnboardingForm: React.FC<OnboardingFormProps> = ({ state }) => {
   const onSubmit = async (data: OnboardingFormSchemaType) => {
     console.log(data);
 
-    // mock form submission
-    const promise = new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(true);
-      }, 3000);
+    // // mock form submission
+    // const promise = new Promise((resolve) => {
+    //   setTimeout(() => {
+    //     resolve(true);
+    //   }, 3000);
+    // });
+
+    // await promise;
+    // toast.success(data.invitationCode);
+    // form.reset({
+    //   invitationCode: '',
+    // });
+
+    const res = await acceptInvitationMutation.mutateAsync({
+      invitationCode: data.invitationCode,
     });
 
-    await promise;
-    toast.success(data.invitationCode);
-    form.reset({
-      invitationCode: '',
-    });
+    if (!res.data?.slug) {
+      console.error(res.message);
+      toast.error(res.message);
+      return;
+    }
+
+    toast.success(res.message);
+
+    // refetch the session
+    refetch();
+
+    // redirect to team dashboard
+    router.push(`/dashboard/teams/${res.data.slug}`);
   };
 
   return (
@@ -77,7 +105,7 @@ export const OnboardingForm: React.FC<OnboardingFormProps> = ({ state }) => {
       <section className="flex flex-col items-center">
         <h2>Join a Team on Canvas</h2>
         <p className="text-xs text-primary/50">
-          Enter your team invitation below.
+          Enter your team invitation code below.
         </p>
       </section>
       <Form {...form}>
@@ -94,7 +122,7 @@ export const OnboardingForm: React.FC<OnboardingFormProps> = ({ state }) => {
                   <InputOTP
                     maxLength={6}
                     {...field}
-                    disabled={form.formState.isSubmitting}
+                    disabled={form.formState.isSubmitting || isPending}
                     autoFocus
                   >
                     <InputOTPSlot index={0} className="rounded-sm border" />
@@ -112,7 +140,7 @@ export const OnboardingForm: React.FC<OnboardingFormProps> = ({ state }) => {
           <Button
             type="submit"
             size="sm"
-            disabled={form.formState.isSubmitting}
+            disabled={form.formState.isSubmitting || isPending}
             // loading={form.formState.isSubmitting}
           >
             Join Team
@@ -127,15 +155,36 @@ export const OnboardingForm: React.FC<OnboardingFormProps> = ({ state }) => {
             <div className="h-[1px] w-[100px] bg-primary/20" />
           </div>
 
-          <Button
-            size="sm"
-            asChild
-            type="button"
-            variant="secondary"
-            disabled={form.formState.isSubmitting}
-          >
-            <Link href="/organization/new">Create your Organization</Link>
-          </Button>
+          {isPending ? (
+            <Button size="sm" disabled>
+              <LoadingIcon className="animate-spin" />
+            </Button>
+          ) : (
+            <>
+              {session?.session.orgSlug ? (
+                <Button
+                  asChild
+                  variant="default"
+                  disabled={form.formState.isSubmitting || isPending}
+                >
+                  <Link href="/dashboard/organization">
+                    Continue with {slugToString(session.session.orgSlug)}{' '}
+                    <RightArrowIcon />
+                  </Link>
+                </Button>
+              ) : (
+                <Button
+                  size="sm"
+                  asChild
+                  type="button"
+                  variant="secondary"
+                  disabled={form.formState.isSubmitting || isPending}
+                >
+                  <Link href="/organization/new">Create your Organization</Link>
+                </Button>
+              )}
+            </>
+          )}
         </>
       )}
       <p className="flex items-center gap-2 text-xs leading-none text-primary/50">

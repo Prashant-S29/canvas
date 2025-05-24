@@ -1,6 +1,7 @@
 import { pgEnum, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import type { z } from 'zod';
+import { organization } from './org';
 import { role } from './role';
 import { team } from './team';
 
@@ -22,6 +23,13 @@ export const team_invitation = pgTable('team_invitation', {
   teamSlug: text('team_slug')
     .notNull()
     .references(() => team.slug, {
+      onDelete: 'cascade',
+      onUpdate: 'cascade',
+    }),
+
+  orgSlug: text('org_slug')
+    .notNull()
+    .references(() => organization.slug, {
       onDelete: 'cascade',
       onUpdate: 'cascade',
     }),

@@ -7,6 +7,7 @@
 <!-- TODO: -->
 
 - fix get session in auth.ts file, you are making 3 db call to get session data
+- fix team invitation mail template
 
 | Work                                                       | Status |
 | ---------------------------------------------------------- | ------ |
@@ -14,3 +15,4 @@
 | properly set middleware for all the mutations              | no     |
 | verify organization flow                                   | no     |
 | delete my account                                          | no     |
+

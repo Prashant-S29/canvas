@@ -34,7 +34,7 @@ export const Hero: React.FC = async () => {
         your online courses, projects, and more.
       </p>
 
-      {/* {JSON.stringify(session)} */}
+      {JSON.stringify(session)}
 
       <section className="mt-5 flex items-center justify-center gap-3">
         {session?.user.id ? (
@@ -56,7 +56,9 @@ export const Hero: React.FC = async () => {
                 {session.session.teamSlug ? (
                   <>
                     <Button asChild variant="default">
-                      <Link href="/dashboard/organization">
+                      <Link
+                        href={`/dashboard/teams/${session.session.teamSlug}`}
+                      >
                         Continue with {slugToString(session.session.teamSlug)}{' '}
                         <RightArrowIcon />
                       </Link>

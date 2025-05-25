@@ -19,12 +19,15 @@ import {
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu';
 import { Skeleton } from '~/components/ui/skeleton';
+import { useMounted } from '~/hooks';
 
 export const NavbarUserProfile: React.FC = () => {
-  const { data: session, isPending } = authClient.useSession();
   const router = useRouter();
+  const mounted = useMounted();
 
+  const { data: session, isPending } = authClient.useSession();
   const [loading, setLoading] = React.useState(false);
+
   const handleSignOut = async () => {
     setLoading(true);
     await authClient.signOut({
@@ -37,6 +40,8 @@ export const NavbarUserProfile: React.FC = () => {
     });
     setLoading(false);
   };
+
+  if (!mounted) return null;
 
   return (
     <>

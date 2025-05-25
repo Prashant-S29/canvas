@@ -8,6 +8,7 @@
 
 - fix get session in auth.ts file, you are making 3 db call to get session data
 - fix team invitation mail template
+- auth not woking n production
 
 | Work                                                       | Status |
 | ---------------------------------------------------------- | ------ |

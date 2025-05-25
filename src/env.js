@@ -34,7 +34,6 @@ export const env = createEnv({
     EMAIL_PASS: z.string().min(1, {
       message: 'EMAIL_PASS must be set',
     }),
-
   },
 
   client: {

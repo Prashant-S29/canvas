@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import type React from 'react';
 
@@ -5,16 +7,20 @@ import type React from 'react';
 import { ThemeToggler } from '~/components/common';
 import { Button } from '~/components/ui/button';
 
-import { headers } from 'next/headers';
 // icons
 import { SocialIcons } from 'public/icons';
 import { NavbarUserProfile } from '~/components/common';
-import { auth } from '~/lib/auth';
+import { Skeleton } from '~/components/ui/skeleton';
+import { useMounted } from '~/hooks';
+import { authClient } from '~/lib/auth-client';
 
-export const Header: React.FC = async () => {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+export const Header: React.FC = () => {
+  const { data: session, isPending } = authClient.useSession();
+
+  const mounted = useMounted();
+
+  if (!mounted) return null;
+
   return (
     <header className="fixed top-0 z-50 flex w-full items-center justify-between px-[200px] py-4">
       <Link href="/" className="flex items-center gap-2 text-sm font-medium">
@@ -41,12 +47,18 @@ export const Header: React.FC = async () => {
         </Button>
         <div className="mx-3 h-3 w-[0.5px] bg-primary/50" />
 
-        {session?.user?.id ? (
-          <NavbarUserProfile />
+        {isPending ? (
+          <Skeleton className="h-9 w-[150px] rounded-sm" />
         ) : (
-          <Button size="sm" variant="default" asChild>
-            <Link href="/signup">Sign Up</Link>
-          </Button>
+          <>
+            {session?.user?.id ? (
+              <NavbarUserProfile />
+            ) : (
+              <Button size="sm" variant="default" asChild>
+                <Link href="/signup">Sign Up</Link>
+              </Button>
+            )}
+          </>
         )}
       </section>
     </header>

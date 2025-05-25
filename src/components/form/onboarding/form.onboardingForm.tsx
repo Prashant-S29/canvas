@@ -28,6 +28,7 @@ import {
   FormMessage,
 } from '~/components/ui/form';
 import { InputOTP, InputOTPSlot } from '~/components/ui/input-otp';
+import { useMounted } from '~/hooks';
 import { authClient } from '~/lib/auth-client';
 import { api } from '~/trpc/react';
 import { slugToString } from '~/utils';
@@ -37,8 +38,10 @@ interface OnboardingFormProps {
 }
 
 export const OnboardingForm: React.FC<OnboardingFormProps> = ({ state }) => {
-  const { data: session, isPending, refetch } = authClient.useSession();
   const router = useRouter();
+  const mounted = useMounted();
+
+  const { data: session, isPending, refetch } = authClient.useSession();
 
   // mutation
   const acceptInvitationMutation = api.team.acceptInvitation.useMutation();
@@ -86,6 +89,8 @@ export const OnboardingForm: React.FC<OnboardingFormProps> = ({ state }) => {
     // redirect to team dashboard
     router.push(`/dashboard/teams/${res.data.slug}`);
   };
+
+  if (!mounted) return null;
 
   return (
     <div className="flex w-[400px] flex-col items-center gap-3 rounded-xl border bg-sidebar px-5 py-8">

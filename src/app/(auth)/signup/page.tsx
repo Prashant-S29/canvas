@@ -14,7 +14,15 @@ export const generateMetadata = () =>
     url: '/signup',
   });
 
-const SignUp: React.FC = async () => {
+interface Props {
+  searchParams: Promise<{
+    redirect: string;
+  }>;
+}
+
+const SignUp: React.FC<Props> = async ({ searchParams }) => {
+  const redirectTo = (await searchParams).redirect;
+
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -47,7 +55,7 @@ const SignUp: React.FC = async () => {
             Sign up to get started
           </p>
         </section>
-        <ContinueWithGitHub />
+        <ContinueWithGitHub redirectTo={redirectTo} />
       </section>
     </div>
   );

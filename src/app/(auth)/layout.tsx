@@ -5,6 +5,7 @@ import { generateSeo } from '~/utils';
 
 // fonts
 import { clashGrotesk, satoshi } from 'public/fonts';
+import { NoHeader } from '~/components/layout';
 
 // metadata
 export const generateMetadata = () =>
@@ -23,9 +24,15 @@ export default function AuthLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${satoshi.variable} ${clashGrotesk.variable}`}>
+    <html
+      lang="en"
+      className={`${satoshi.variable} ${clashGrotesk.variable} antialiased`}
+    >
       <body>
-        <Provider>{children}</Provider>
+        <Provider>
+          <NoHeader />
+          {children}
+        </Provider>
       </body>
     </html>
   );

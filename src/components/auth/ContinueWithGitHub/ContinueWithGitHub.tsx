@@ -13,9 +13,13 @@ import { toast } from 'sonner';
 // components
 import { Button } from '~/components/ui/button';
 import { useMounted } from '~/hooks/useMounted';
-import { env } from '~/env';
+// import { env } from '~/env';
 
-export const ContinueWithGitHub: React.FC = () => {
+interface Props {
+  redirectTo?: string;
+}
+
+export const ContinueWithGitHub: React.FC<Props> = ({ redirectTo }) => {
   const [loading, setLoading] = useState(false);
   const mounted = useMounted();
 
@@ -25,7 +29,7 @@ export const ContinueWithGitHub: React.FC = () => {
     toast.promise(
       authClient.signIn.social({
         provider: 'github',
-        callbackURL: `${process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : env.NEXT_PUBLIC_BASE_URL}/onboarding`,
+        callbackURL: redirectTo ?? '/',
       }),
       {
         loading: 'Logging in...',
@@ -39,7 +43,7 @@ export const ContinueWithGitHub: React.FC = () => {
 
   return (
     <Button
-      variant="secondary"
+      variant="outline"
       className="w-full "
       disabled={loading}
       onClick={async () => {

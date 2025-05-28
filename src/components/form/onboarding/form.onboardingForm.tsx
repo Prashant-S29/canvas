@@ -40,6 +40,7 @@ interface OnboardingFormProps {
 export const OnboardingForm: React.FC<OnboardingFormProps> = ({ state }) => {
   const router = useRouter();
   const mounted = useMounted();
+  const utils = api.useUtils();
 
   const { data: session, isPending, refetch } = authClient.useSession();
 
@@ -71,9 +72,18 @@ export const OnboardingForm: React.FC<OnboardingFormProps> = ({ state }) => {
     //   invitationCode: '',
     // });
 
-    const res = await acceptInvitationMutation.mutateAsync({
-      invitationCode: data.invitationCode,
-    });
+    const res = await acceptInvitationMutation.mutateAsync(
+      {
+        invitationCode: data.invitationCode,
+      },
+      {
+        onSuccess: async () => {
+          await utils.team.getAllTeamUsersByTeamSlug.invalidate();
+          await utils.team.getAllPendingInvitations.invalidate();
+          await utils.team.getAllInvitations.invalidate();
+        },
+      },
+    );
 
     if (!res.data?.slug) {
       console.error(res.message);
@@ -185,7 +195,7 @@ export const OnboardingForm: React.FC<OnboardingFormProps> = ({ state }) => {
                   variant="secondary"
                   disabled={form.formState.isSubmitting || isPending}
                 >
-                  <Link href="/organization/new">Create your Organization</Link>
+                  <Link href="/organization/new">Create Organization</Link>
                 </Button>
               )}
             </>

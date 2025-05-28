@@ -63,7 +63,7 @@ export const CreateNewTeamForm: React.FC<CreateNewTeamFormProps> = ({
     // toast.info(JSON.stringify(data));
     const res = await createNewTeamMutation.mutateAsync(data, {
       onSuccess: async () => {
-        await utils.team.getAllTeams.invalidate();
+        await utils.team.getAllTeamsInOrg.invalidate();
       },
     });
 

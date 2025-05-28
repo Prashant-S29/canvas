@@ -33,8 +33,6 @@ export const TeamCard: React.FC<TeamCardProps> = ({ teamsData }) => {
                 <span className="text-xs text-primary/50">05</span>
               </p>
             </section>
-
-            <div className="w-full h-[200px] rounded-lg bg-primary/10" />
           </div>
         </div>
       </Link>

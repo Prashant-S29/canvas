@@ -1,7 +1,7 @@
-import type React from 'react';
+import type React from "react";
 
 // components
-import { api } from '~/trpc/server';
+import { api } from "~/trpc/server";
 
 interface Params {
   params: Promise<{ slug: string }>;
@@ -20,9 +20,9 @@ const TeamPage: React.FC<Params> = async ({ params }) => {
       <section>
         <h1 className="text-xl font-semibold text-primary">{teamData.name}</h1>
         <p className="text-sm text-primary/70">{teamData.description}</p>
-      </section>
 
-      {JSON.stringify(teamData)}
+        {}
+      </section>
     </div>
   );
 };

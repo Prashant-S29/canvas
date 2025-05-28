@@ -49,7 +49,7 @@ interface TeamMemberInvitationTableProps {
 export const PendingInvitationTable: React.FC<
   TeamMemberInvitationTableProps
 > = ({ teamSlug }) => {
-  const { data: allTeamUsers, isLoading } = api.team.getAllInvitations.useQuery(
+  const { data: allTeamUsers, isLoading } = api.team.getAllPendingInvitations.useQuery(
     {
       teamSlug,
     },

@@ -107,9 +107,13 @@ export const teamRouter = createTRPCRouter({
       }
     }),
 
-  getAllTeams: protectedProcedure.query(async ({ ctx }) => {
+  getAllTeamsInOrg: protectedProcedure.query(async ({ ctx }) => {
     try {
-      const teams = await ctx.db.query.team.findMany();
+      const teams = await ctx.db
+        .select()
+        .from(team)
+        .where(eq(team.org_slug, ctx.session.session.orgSlug ?? ''))
+        .execute();
 
       return {
         data: teams,
@@ -172,6 +176,80 @@ export const teamRouter = createTRPCRouter({
       }
     }),
 
+  // getTeamBySlugWithMemberInfo: protectedProcedure
+  //   .input(z.object({ teamSlug: z.string() }))
+  //   .query(async ({ input, ctx }) => {
+  //     try {
+  //       const teamData = await ctx.db
+  //         .select({
+  //           team: team,
+  //           member: team_user,
+  //           user: user,
+  //         })
+  //         .from(team)
+  //         .leftJoin(team_user, eq(team.slug, team_user.teamSlug))
+  //         .leftJoin(user, eq(team_user.userMail, user.email))
+  //         .where(eq(team.slug, input.teamSlug));
+
+  //       if (!teamData.length) {
+  //         return {
+  //           data: null,
+  //           message: 'Team not found',
+  //           error: null,
+  //         };
+  //       }
+
+  //       const team = teamData[0];
+  //       team?.team[0].
+
+  //       const members = teamData
+  //         .filter((row) => row.member !== null)
+  //         .map((row) => ({
+  //           ...row.member,
+  //           user: row.user,
+  //         }));
+
+  //       return {
+  //         data: {
+  //           ...teamInfo,
+  //           members,
+  //         },
+  //         message: 'Team fetched successfully',
+  //         error: null,
+  //       };
+  //     } catch (error) {
+  //       return {
+  //         data: null,
+  //         error: `Failed to fetch team: ${JSON.stringify(error)}`,
+  //         message: 'Something went wrong',
+  //       };
+  //     }
+  //   }),
+
+  getUserParticipatedTeams: protectedProcedure
+    .input(z.object({ userMail: z.string() }))
+    .query(async ({ input, ctx }) => {
+      try {
+        const res = await ctx.db
+          .select()
+          .from(team_user)
+          .where(eq(team_user.userMail, input.userMail))
+          .execute();
+
+        return {
+          data: res,
+          message: 'Teams fetched successfully',
+          error: null,
+        };
+      } catch (error) {
+        return {
+          data: null,
+          error: `Failed to fetch teams: ${JSON.stringify(error)}`,
+          message: 'Something went wrong',
+        };
+      }
+    }),
+
   getAllInvitations: protectedProcedure
     .input(z.object({ teamSlug: z.string() }))
     .query(async ({ input, ctx }) => {
@@ -197,113 +275,125 @@ export const teamRouter = createTRPCRouter({
       }
     }),
 
-  inviteMembers: protectedProcedure
-    .input(InviteMemberSchema)
-    .mutation(async ({ input, ctx }) => {
+  getAllPendingInvitations: protectedProcedure
+    .input(z.object({ teamSlug: z.string() }))
+    .query(async ({ input, ctx }) => {
       try {
-        const caller = createCaller(ctx);
-
-        // check for team
-        const getTeamRes = await ctx.db.query.team.findFirst({
-          where: (team) => eq(team.slug, input.teamSlug),
-        });
-
-        if (!getTeamRes?.slug) {
-          return {
-            data: null,
-            message: 'Team not found, please try again',
-            error: 'Team not found',
-          };
-        }
-
-        // check if invitation already exists
-        const invitationExists = await ctx.db
+        const getAllInvitationsRes = await ctx.db
           .select()
           .from(team_invitation)
-          .where(eq(team_invitation.userMail, input.userMail))
+          .where(
+            and(
+              eq(team_invitation.teamSlug, input.teamSlug),
+              eq(team_invitation.invitationStatus, 'PENDING'),
+            ),
+          )
+          .orderBy(desc(team_invitation.createdAt))
           .execute();
-
-        if (invitationExists.length) {
-          return {
-            data: null,
-            message: 'Invitation already exists',
-            error: 'Invitation already exists',
-          };
-        }
-
-        // check if already a member
-        const memberExists = await ctx.db
-          .select()
-          .from(team_user)
-          .where(eq(team_user.userMail, input.userMail))
-          .execute();
-
-        if (memberExists.length) {
-          return {
-            data: null,
-            message: 'User already a member',
-            error: 'User already a member',
-          };
-        }
-
-        if (!ctx.session.session.orgSlug) {
-          return {
-            data: null,
-            message: 'Organization not found',
-            error: 'Organization not found',
-          };
-        }
-
-        // creates new member invitation
-        const memberInvitationRes = await ctx.db
-          .insert(team_invitation)
-          .values({
-            ...input,
-            invitedBy: ctx.session.user.email,
-            orgSlug: ctx.session.session.orgSlug,
-          })
-          .returning({
-            id: team_invitation.id,
-          });
-
-        if (!memberInvitationRes[0]?.id) {
-          return {
-            data: null,
-            message: 'Failed to create team member',
-            error: 'Failed to create team member',
-          };
-        }
-
-        // send invitation code via email
-        const mailRes = await caller.sendTeamInvitationMail({
-          senderName: ctx.session.user.name ?? '<no-name>',
-          senderMail: ctx.session.user.email ?? '<no-email>',
-          orgSlug: ctx.session.session.orgSlug ?? '<no-org>',
-          teamName: slugToString(input.teamSlug),
-          receiverMail: input.userMail,
-          invitationLink: `https://localhost:3000/teams/join?tokenId=${team.invitationCode}`,
-        });
-
-        if (!mailRes?.accepted) {
-          return {
-            data: null,
-            message: 'Failed to send team invitation email',
-            error: 'Unable to send email',
-          };
-        }
 
         return {
-          data: memberInvitationRes[0],
-          message: 'Team invitation email sent successfully',
+          data: getAllInvitationsRes,
+          message: 'Team invitations fetched successfully',
           error: null,
         };
       } catch (error) {
         return {
           data: null,
-          error: `Failed to fetch team: ${JSON.stringify(error)}`,
+          error: `Failed to fetch team invitations: ${JSON.stringify(error)}`,
           message: 'Something went wrong',
         };
       }
+    }),
+
+  inviteMembers: protectedProcedure
+    .input(InviteMemberSchema)
+    .mutation(async ({ input, ctx }) => {
+      return await ctx.db
+        .transaction(async (tx) => {
+          const caller = createCaller(ctx);
+
+          // 1. Check for team
+          const getTeamRes = await tx
+            .select()
+            .from(team)
+            .where(eq(team.slug, input.teamSlug))
+            .limit(1)
+            .execute();
+
+          if (!getTeamRes.length || !getTeamRes[0]?.slug) {
+            throw new Error('Team not found, please try again');
+          }
+
+          // 2. Check if invitation already exists
+          const invitationExists = await tx
+            .select()
+            .from(team_invitation)
+            .where(eq(team_invitation.userMail, input.userMail))
+            .execute();
+
+          if (invitationExists.length) {
+            throw new Error('Invitation already exists');
+          }
+
+          // 3. Check if already a member
+          const memberExists = await tx
+            .select()
+            .from(team_user)
+            .where(eq(team_user.userMail, input.userMail))
+            .execute();
+
+          if (memberExists.length) {
+            throw new Error('User already a member');
+          }
+
+          if (!ctx.session.session.orgSlug) {
+            throw new Error('Organization not found');
+          }
+
+          // 4. Create new member invitation
+          const memberInvitationRes = await tx
+            .insert(team_invitation)
+            .values({
+              ...input,
+              invitedBy: ctx.session.user.email,
+              orgSlug: ctx.session.session.orgSlug,
+            })
+            .returning({
+              id: team_invitation.id,
+            });
+
+          if (!memberInvitationRes[0]?.id) {
+            throw new Error('Failed to create team member');
+          }
+
+          // 5. Send invitation code via email
+          const mailRes = await caller.sendTeamInvitationMail({
+            senderName: ctx.session.user.name ?? '<no-name>',
+            senderMail: ctx.session.user.email ?? '<no-email>',
+            orgSlug: ctx.session.session.orgSlug ?? '<no-org>',
+            teamName: slugToString(input.teamSlug),
+            receiverMail: input.userMail,
+            invitationLink: `https://localhost:3000/teams/join?code=${getTeamRes[0].invitationCode}`,
+          });
+
+          if (!mailRes?.accepted) {
+            throw new Error('Failed to send team invitation email');
+          }
+
+          // 6. Return response
+          return {
+            data: memberInvitationRes[0],
+            message: 'Team invitation email sent successfully',
+            error: null,
+          };
+        })
+        .catch((error) => {
+          return {
+            data: null,
+            message: error.message || 'Transaction failed',
+            error: error.message || 'Transaction failed',
+          };
+        });
     }),
 
   updateRoleInInvitation: protectedProcedure
@@ -379,78 +469,89 @@ export const teamRouter = createTRPCRouter({
   acceptInvitation: protectedProcedure
     .input(z.object({ invitationCode: z.string() }))
     .mutation(async ({ input, ctx }) => {
-      // get team using invitation code
-      const getTeamRes = await ctx.db
-        .select()
-        .from(team)
-        .where(eq(team.invitationCode, input.invitationCode))
-        .limit(1)
-        .execute();
+      return await ctx.db
+        .transaction(async (tx) => {
+          // 1. Get team using invitation code
+          const getTeamRes = await tx
+            .select()
+            .from(team)
+            .where(eq(team.invitationCode, input.invitationCode))
+            .limit(1)
+            .execute();
 
-      if (!getTeamRes.length || !getTeamRes?.[0]?.slug) {
-        return {
-          data: null,
-          message: 'Invitation not found',
-          error: 'Invitation not found',
-        };
-      }
+          if (!getTeamRes.length || !getTeamRes?.[0]?.slug) {
+            throw new Error('Invitation not found');
+          }
 
-      // if team found, check if the user in invited or not
-      const getInvitationRes = await ctx.db
-        .select()
-        .from(team_invitation)
-        .where(
-          and(
-            eq(team_invitation.teamSlug, getTeamRes[0].slug),
-            eq(team_invitation.userMail, ctx.session.user.email),
-          ),
-        )
-        .limit(1)
-        .execute();
+          const teamData = getTeamRes[0];
 
-      if (!getInvitationRes.length || !getInvitationRes?.[0]?.id) {
-        return {
-          data: null,
-          message: 'You are not invited to this team',
-          error: 'You are not invited to this team',
-        };
-      }
+          // 2. Check if the user is invited
+          const getInvitationRes = await tx
+            .select()
+            .from(team_invitation)
+            .where(
+              and(
+                eq(team_invitation.teamSlug, teamData.slug),
+                eq(team_invitation.userMail, ctx.session.user.email),
+              ),
+            )
+            .limit(1)
+            .execute();
 
-      // if team found and user is invited, accept the invitation
-      const acceptInvitationRes = await ctx.db
-        .insert(team_user)
-        .values({
-          role: getInvitationRes?.[0].role,
-          invitedBy: getInvitationRes?.[0].invitedBy,
-          teamSlug: getTeamRes[0].slug,
-          userMail: ctx.session.user.email,
-          orgSlug: getTeamRes[0].org_slug,
+          if (!getInvitationRes.length || !getInvitationRes?.[0]?.id) {
+            throw new Error('You are not invited to this team');
+          }
+
+          const invitationData = getInvitationRes[0];
+
+          // 3. Accept the invitation by inserting into team_user
+          const acceptInvitationRes = await tx
+            .insert(team_user)
+            .values({
+              role: invitationData.role,
+              invitedBy: invitationData.invitedBy,
+              teamSlug: teamData.slug,
+              userMail: ctx.session.user.email,
+              orgSlug: teamData.org_slug,
+            })
+            .returning({
+              id: team_user.id,
+              slug: team_user.teamSlug,
+            });
+
+          if (!acceptInvitationRes[0]?.id) {
+            throw new Error('Failed to accept invitation');
+          }
+
+          // 4. Update invitation status
+          await tx
+            .update(team_invitation)
+            .set({
+              invitationStatus: 'ACCEPTED',
+            })
+            .where(eq(team_invitation.id, invitationData.id));
+
+          // 5. Update user role
+          await tx
+            .update(user)
+            .set({
+              role: invitationData.role,
+            })
+            .where(eq(user.email, ctx.session.user.email));
+
+          // 6. Return response
+          return {
+            data: acceptInvitationRes[0],
+            message: 'Invitation accepted successfully',
+            error: null,
+          };
         })
-        .returning({
-          id: team_user.id,
-          slug: team_user.teamSlug,
+        .catch((error) => {
+          return {
+            data: null,
+            message: error.message || 'Transaction failed',
+            error: error.message || 'Transaction failed',
+          };
         });
-
-      if (!acceptInvitationRes[0]?.id) {
-        return {
-          data: null,
-          message: 'Failed to accept invitation',
-          error: 'Failed to accept invitation',
-        };
-      }
-
-      // update the role in user table
-      await ctx.db
-        .update(user)
-        .set({
-          role: getInvitationRes?.[0].role,
-        })
-        .where(eq(user.email, ctx.session.user.email));
-
-      return {
-        data: acceptInvitationRes[0],
-        message: 'Invitation accepted successfully',
-        error: null,
-      };
     }),
 });

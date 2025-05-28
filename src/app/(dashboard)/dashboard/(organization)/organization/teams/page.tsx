@@ -50,7 +50,7 @@ const Teams: React.FC = async () => {
         <TeamFomDialog
           state="create"
           trigger={
-            <Button size="sm" variant="default">
+            <Button size="smaller" variant="default">
               <AddIcon /> Create New Team
             </Button>
           }

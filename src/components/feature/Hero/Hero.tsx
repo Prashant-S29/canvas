@@ -10,6 +10,7 @@ import { headers } from 'next/headers';
 import { CheckIcon, RightArrowIcon } from 'public/icons';
 import { auth } from '~/lib/auth';
 import { slugToString } from '~/utils';
+// import { UserParticipatedTeams } from '~/components/common';
 
 export const Hero: React.FC = async () => {
   const session = await auth.api.getSession({
@@ -34,7 +35,7 @@ export const Hero: React.FC = async () => {
         your online courses, projects, and more.
       </p>
 
-      {JSON.stringify(session)}
+      {/* {JSON.stringify(session)} */}
 
       <section className="mt-5 flex items-center justify-center gap-3">
         {session?.user.id ? (
@@ -56,15 +57,12 @@ export const Hero: React.FC = async () => {
                 {session.session.teamSlug ? (
                   <>
                     <Button asChild variant="default">
-                      <Link
-                        href={`/dashboard/teams/${session.session.teamSlug}`}
-                      >
-                        Continue with {slugToString(session.session.teamSlug)}{' '}
-                        <RightArrowIcon />
-                      </Link>
+                      <Link href="/profile/teams">All Teams</Link>
                     </Button>
                     <Button asChild variant="secondary">
-                      <Link href="/teams/join">Join a Team</Link>
+                      <Link href="/organization/new">
+                        Create your organization <RightArrowIcon />
+                      </Link>
                     </Button>
                   </>
                 ) : (
@@ -83,6 +81,11 @@ export const Hero: React.FC = async () => {
           </Button>
         )}
       </section>
+
+      {/* <section className="mt-5">
+        <p>Your Participated Teams</p>
+        <UserParticipatedTeams />
+      </section> */}
 
       <section className="absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center justify-center gap-5">
         <p className="flex items-center gap-1 text-sm">

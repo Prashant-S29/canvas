@@ -67,6 +67,7 @@ export const InviteMemberForm: React.FC<CreateNewTeamFormProps> = ({
     const res = await teamInviteMembersMutation.mutateAsync(data, {
       onSuccess: async () => {
         await utils.team.getAllTeamUsersByTeamSlug.invalidate();
+        await utils.team.getAllPendingInvitations.invalidate();
         await utils.team.getAllInvitations.invalidate();
       },
     });

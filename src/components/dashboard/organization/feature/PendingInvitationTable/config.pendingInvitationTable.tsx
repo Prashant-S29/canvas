@@ -53,5 +53,4 @@ export const PendingInvitationTableConfig: ColumnDef<
       return formatDate(invitedAt);
     },
   },
-  
 ];

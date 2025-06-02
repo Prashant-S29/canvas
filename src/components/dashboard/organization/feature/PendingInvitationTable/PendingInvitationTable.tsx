@@ -49,11 +49,10 @@ interface TeamMemberInvitationTableProps {
 export const PendingInvitationTable: React.FC<
   TeamMemberInvitationTableProps
 > = ({ teamSlug }) => {
-  const { data: allTeamUsers, isLoading } = api.team.getAllPendingInvitations.useQuery(
-    {
+  const { data: allTeamUsers, isLoading } =
+    api.team.getAllPendingInvitations.useQuery({
       teamSlug,
-    },
-  );
+    });
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(

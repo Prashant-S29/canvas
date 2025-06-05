@@ -1,1 +1,1 @@
-export * from "./UserParticipatedTeams"
+export * from './UserParticipatedTeams';

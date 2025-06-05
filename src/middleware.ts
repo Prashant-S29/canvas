@@ -12,15 +12,20 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  if (cookies && pathname === '/dashboard') {
-    return NextResponse.redirect(
-      new URL('/dashboard/organization', request.url),
-    );
-  }
+  // if (cookies && pathname === '/dashboard') {
+  //   return NextResponse.redirect(
+  //     new URL('/dashboard/organization', request.url),
+  //   );
+  // }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/onboarding', '/teams/:path*','/profile/:path*'],
+  matcher: [
+    '/dashboard/:path*',
+    '/onboarding',
+    '/teams/:path*',
+    '/profile/:path*',
+  ],
 };

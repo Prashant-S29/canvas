@@ -6,7 +6,7 @@ import { auth } from '~/lib/auth';
 import type { Role } from '~/server/db/schema/team_user';
 
 interface CheckAuth {
-  role: Role;
+  role: Role[];
   redirectTo: string;
   isOrgDashboard?: boolean;
 }
@@ -26,7 +26,7 @@ export const checkAuth = async ({
   }
 
   // handle role based auth
-  if (session.session.role !== role) {
+  if (!session.session.role || !role.includes(session.session.role)) {
     redirect(redirectTo);
   }
 

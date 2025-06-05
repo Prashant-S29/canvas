@@ -11,7 +11,7 @@ import { authClient } from '~/lib/auth-client';
 export const AllTeamsGrid: React.FC = () => {
   const { data: allTeamsInOrgData, isLoading } =
     api.team.getAllTeamsInOrg.useQuery();
-  const { data: session, isPending } = authClient.useSession();
+  const { isPending } = authClient.useSession();
 
   return (
     <>

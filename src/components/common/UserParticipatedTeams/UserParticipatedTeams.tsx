@@ -6,16 +6,6 @@ import { Skeleton } from '~/components/ui/skeleton';
 import { authClient } from '~/lib/auth-client';
 import { api } from '~/trpc/react';
 import { slugToString } from '~/utils';
-import { formatRole } from '~/utils/formatRole';
-
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '~/components/ui/card';
 
 export const UserParticipatedTeams: React.FC = () => {
   const { data: session, isPending } = authClient.useSession();

@@ -23,10 +23,10 @@ export const generateMetadata = async () => {
   return generateSeo({
     title: {
       template: `%s | ${slugToString(
-        session?.session.orgSlug?.split(' ')[0] ?? '',
+        session?.session.teamSlug?.split(' ')[0] ?? '',
       )}'s Dashboard | Canvas`,
       default: `${slugToString(
-        session?.session.orgSlug?.split(' ')[0] ?? '',
+        session?.session.teamSlug?.split(' ')[0] ?? '',
       )}'s Dashboard | Canvas`,
     },
     description: 'Dashboard',

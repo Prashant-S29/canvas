@@ -3,23 +3,22 @@ import { checkAuth, generateSeo } from '~/utils';
 
 export const generateMetadata = () =>
   generateSeo({
-    title: 'Settings',
-    description: 'Settings',
+    title: 'Projects',
+    description: 'Projects',
     url: 'https://canvas.com/settings',
   });
 
-const Settings: React.FC = async () => {
+const Projects: React.FC = async () => {
   await checkAuth({
     redirectTo: '/signup',
-    role: ['ORG_ADMIN'],
-    isOrgDashboard: true,
+    role: ['TEAM_ADMIN', 'TEAM_MEMBER', 'ORG_ADMIN'],
   });
 
   return (
     <div className="relative flex h-screen w-full pt-[100px]">
-      <h1 className="text-xl font-semibold">Settings</h1>
+      <h1 className="text-xl font-semibold">Projects</h1>
     </div>
   );
 };
 
-export default Settings;
+export default Projects;

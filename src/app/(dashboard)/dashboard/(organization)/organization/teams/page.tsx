@@ -25,8 +25,8 @@ export const generateMetadata = () =>
 const Teams: React.FC = async () => {
   await checkAuth({
     redirectTo: '/signup',
-    role: 'ORG_ADMIN',
-    isOrgDashboard: true,
+    role: ['ORG_ADMIN'],
+    // isOrgDashboard: true,
   });
 
   const session = await auth.api.getSession({

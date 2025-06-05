@@ -1,33 +1,33 @@
-"use client";
+'use client';
 
-import type { ColumnDef } from "@tanstack/react-table";
-import type { z } from "zod";
+import type { ColumnDef } from '@tanstack/react-table';
+import type { z } from 'zod';
 
-import { Avatar, AvatarFallback } from "~/components/ui/avatar";
+import { Avatar, AvatarFallback } from '~/components/ui/avatar';
 // Components
 // import { Badge } from "~/components/ui/badge";
-import type { TeamUserSelectSchema } from "~/server/db/schema/team_user";
-import { formatDate } from "~/utils/dateHandler";
-import { formatRole } from "~/utils/formatRole";
+import type { TeamUserSelectSchema } from '~/server/db/schema/team_user';
+import { formatDate } from '~/utils/dateHandler';
+import { formatRole } from '~/utils/formatRole';
 
-import { role as Role } from "~/server/db/schema/role";
+import { toast } from 'sonner';
+import { Button } from '~/components/ui/button';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "~/components/ui/select";
-import { Button } from "~/components/ui/button";
-import { toast } from "sonner";
-import { api } from "~/trpc/react";
+} from '~/components/ui/select';
+import { role as Role } from '~/server/db/schema/role';
+import { api } from '~/trpc/react';
 
 export const TeamMemberTableConfig: ColumnDef<
   z.infer<typeof TeamUserSelectSchema>
 >[] = [
   {
-    accessorKey: "userMail",
-    header: "Name",
+    accessorKey: 'userMail',
+    header: 'Name',
     cell: ({ row }) => {
       const { userMail } = row.original;
       return (
@@ -46,8 +46,8 @@ export const TeamMemberTableConfig: ColumnDef<
   },
 
   {
-    accessorKey: "createdAt",
-    header: "Invited At",
+    accessorKey: 'createdAt',
+    header: 'Invited At',
     cell: ({ row }) => {
       const { createdAt } = row.original;
       return <p className="text-xs font-medium">{formatDate(createdAt)}</p>;
@@ -63,8 +63,8 @@ export const TeamMemberTableConfig: ColumnDef<
   // },
 
   {
-    accessorKey: "role",
-    header: "Role",
+    accessorKey: 'role',
+    header: 'Role',
     cell: ({ row }) => {
       const { role, id } = row.original;
 
@@ -84,16 +84,16 @@ export const TeamMemberTableConfig: ColumnDef<
         },
       });
 
-      const handleUpdateRole = async (role: "TEAM_MEMBER" | "TEAM_ADMIN") => {
+      const handleUpdateRole = async (role: 'TEAM_MEMBER' | 'TEAM_ADMIN') => {
         return toast.promise(
           updateRoleMutation.mutateAsync({
             invitationId: row.original.id,
             role,
           }),
           {
-            loading: "Updating role...",
-            success: "Role updated successfully",
-            error: "Failed to update role",
+            loading: 'Updating role...',
+            success: 'Role updated successfully',
+            error: 'Failed to update role',
           },
         );
       };
@@ -104,9 +104,9 @@ export const TeamMemberTableConfig: ColumnDef<
             invitationId: id,
           }),
           {
-            loading: "Revoking invitation...",
-            success: "Invitation revoked successfully",
-            error: "Failed to revoke invitation",
+            loading: 'Revoking invitation...',
+            success: 'Invitation revoked successfully',
+            error: 'Failed to revoke invitation',
           },
         );
       };
@@ -115,7 +115,7 @@ export const TeamMemberTableConfig: ColumnDef<
         <section className="flex gap-2">
           <Select
             defaultValue={role}
-            onValueChange={async (role: "TEAM_MEMBER" | "TEAM_ADMIN") => {
+            onValueChange={async (role: 'TEAM_MEMBER' | 'TEAM_ADMIN') => {
               await handleUpdateRole(role);
             }}
           >
@@ -123,36 +123,36 @@ export const TeamMemberTableConfig: ColumnDef<
               className="w-[200px]"
               // disabled={role === Role.ORG_ADMIN}
               disabled={
-                updateRoleMutation.status === "pending" ||
-                revokeInvitationMutation.status === "pending" ||
-                role === Role.enumValues["0"]
+                updateRoleMutation.status === 'pending' ||
+                revokeInvitationMutation.status === 'pending' ||
+                role === Role.enumValues['0']
               }
             >
               <SelectValue placeholder="Role" />
             </SelectTrigger>
             <SelectContent>
-              {role === Role.enumValues["0"] && (
-                <SelectItem value={Role.enumValues["0"]}>
-                  {formatRole(Role.enumValues["0"])}
+              {role === Role.enumValues['0'] && (
+                <SelectItem value={Role.enumValues['0']}>
+                  {formatRole(Role.enumValues['0'])}
                 </SelectItem>
               )}
-              <SelectItem value={Role.enumValues["1"]}>
-                {formatRole(Role.enumValues["1"])}
+              <SelectItem value={Role.enumValues['1']}>
+                {formatRole(Role.enumValues['1'])}
               </SelectItem>
-              <SelectItem value={Role.enumValues["2"]}>
-                {formatRole(Role.enumValues["2"])}
+              <SelectItem value={Role.enumValues['2']}>
+                {formatRole(Role.enumValues['2'])}
               </SelectItem>
             </SelectContent>
           </Select>
 
-          {role !== Role.enumValues["0"] && (
+          {role !== Role.enumValues['0'] && (
             <Button
               // size="sm"
               variant="destructive"
               onClick={handleRevokeInvitation}
               disabled={
-                updateRoleMutation.status === "pending" ||
-                revokeInvitationMutation.status === "pending"
+                updateRoleMutation.status === 'pending' ||
+                revokeInvitationMutation.status === 'pending'
               }
             >
               Revoke

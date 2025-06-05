@@ -1,20 +1,22 @@
-"use client";
+import type React from 'react';
+import { TeamSetting } from '~/components/dashboard/team/feature';
 
-import { useParams } from "next/navigation";
-import type React from "react";
+// utils
+import { checkAuth } from '~/utils';
 
-// components
-import {
-  InvitationHistoryTable,
-  PendingInvitationTable,
-  TeamMemberTable,
-} from "~/components/dashboard/organization/feature";
+interface Params {
+  params: Promise<{ slug: string }>;
+}
 
-// components
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
+const TeamSettingPage: React.FC<Params> = async ({ params }) => {
+  await checkAuth({
+    redirectTo: '/signup',
+    role: ['ORG_ADMIN', 'TEAM_ADMIN', 'TEAM_MEMBER'],
+  });
 
-const TeamSetting: React.FC = () => {
-  const params = useParams<{ slug: string }>();
+  const slug = (await params).slug;
+
+  // const params = useParams<{ slug: string }>();
 
   return (
     <div className="relative min-h-screen w-full pb-5 pt-[100px]">
@@ -23,29 +25,10 @@ const TeamSetting: React.FC = () => {
       </section>
 
       <div className="mt-5 space-y-6">
-        <Tabs defaultValue="members">
-          <TabsList width={"full"}>
-            <TabsTrigger value="members">Members</TabsTrigger>
-            <TabsTrigger value="pending_invitation">
-              Pending Invitations
-            </TabsTrigger>
-            <TabsTrigger value="invitation_history">
-              Invitation History
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value="members">
-            <TeamMemberTable teamSlug={params.slug} />
-          </TabsContent>
-          <TabsContent value="pending_invitation">
-            <PendingInvitationTable teamSlug={params.slug} />
-          </TabsContent>
-          <TabsContent value="invitation_history">
-            <InvitationHistoryTable teamSlug={params.slug} />
-          </TabsContent>
-        </Tabs>
+        <TeamSetting slug={slug} />
       </div>
     </div>
   );
 };
 
-export default TeamSetting;
+export default TeamSettingPage;

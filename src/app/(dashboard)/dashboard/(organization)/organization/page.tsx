@@ -10,7 +10,7 @@ import { checkAuth } from '~/utils';
 const Dashboard: React.FC = async () => {
   await checkAuth({
     redirectTo: '/onboarding',
-    role: 'ORG_ADMIN',
+    role: ['ORG_ADMIN'],
     isOrgDashboard: true,
   });
 

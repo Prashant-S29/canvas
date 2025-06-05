@@ -1,13 +1,20 @@
-import type React from "react";
+import type React from 'react';
 
 // components
-import { api } from "~/trpc/server";
+import { api } from '~/trpc/server';
+import { checkAuth } from '~/utils';
 
 interface Params {
   params: Promise<{ slug: string }>;
 }
 
 const TeamPage: React.FC<Params> = async ({ params }) => {
+  await checkAuth({
+    redirectTo: '/signup',
+    role: ['TEAM_ADMIN', 'TEAM_MEMBER', 'ORG_ADMIN'],
+    // isOrgDashboard: true,
+  });
+
   const slug = (await params).slug;
   const { data: teamData } = await api.team.getTeamBySlug({ teamSlug: slug });
 

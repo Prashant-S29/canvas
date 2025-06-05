@@ -1,21 +1,21 @@
-"use client";
+'use client';
 
-import type { ColumnDef } from "@tanstack/react-table";
-import type { z } from "zod";
-import type { TeamInvitationSelectSchema } from "~/server/db/schema/team_invitation";
+import type { ColumnDef } from '@tanstack/react-table';
+import type { z } from 'zod';
+import type { TeamInvitationSelectSchema } from '~/server/db/schema/team_invitation';
 
-import { Avatar, AvatarFallback } from "~/components/ui/avatar";
+import { Avatar, AvatarFallback } from '~/components/ui/avatar';
 // Components
-import { Badge } from "~/components/ui/badge";
-import { formatDate } from "~/utils/dateHandler";
-import { formatRole } from "~/utils/formatRole";
+import { Badge } from '~/components/ui/badge';
+import { formatDate } from '~/utils/dateHandler';
+import { formatRole } from '~/utils/formatRole';
 
 export const InvitationHistoryTableConfig: ColumnDef<
   z.infer<typeof TeamInvitationSelectSchema>
 >[] = [
   {
-    accessorKey: "userMail",
-    header: "Name",
+    accessorKey: 'userMail',
+    header: 'Name',
     cell: ({ row }) => {
       const { userMail } = row.original;
       return (
@@ -34,16 +34,16 @@ export const InvitationHistoryTableConfig: ColumnDef<
   },
 
   {
-    accessorKey: "createdAt",
-    header: "Invited At",
+    accessorKey: 'createdAt',
+    header: 'Invited At',
     cell: ({ row }) => {
       const { createdAt } = row.original;
       return <p className="text-xs font-medium">{formatDate(createdAt)}</p>;
     },
   },
   {
-    accessorKey: "role",
-    header: "Role",
+    accessorKey: 'role',
+    header: 'Role',
     cell: ({ row }) => {
       const { role } = row.original;
 
@@ -52,8 +52,8 @@ export const InvitationHistoryTableConfig: ColumnDef<
   },
 
   {
-    accessorKey: "invitationStatus",
-    header: "Invitation Status",
+    accessorKey: 'invitationStatus',
+    header: 'Invitation Status',
     cell: ({ row }) => {
       const { invitationStatus } = row.original;
 

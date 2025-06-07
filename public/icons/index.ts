@@ -28,9 +28,13 @@ import { RiDatabaseLine as ClusterOutlineIcon } from 'react-icons/ri';
 import { RiDatabaseFill as ClusterFilledIcon } from 'react-icons/ri';
 import { RiTeamLine as TeamOutline } from 'react-icons/ri';
 import { RiTeamFill as TeamFilled } from 'react-icons/ri';
+
 // dashboard sidebar icons
-import { TbLayoutDashboard as DashboardOutlineIcon } from 'react-icons/tb';
-import { TbLayoutDashboardFilled as DashboardFilledIcon } from 'react-icons/tb';
+import { BsGrid as DashboardOutlineIcon } from 'react-icons/bs';
+import { BsFillGridFill as DashboardFilledIcon } from 'react-icons/bs';
+
+import { IoBookOutline as TemplateOutlineIcon } from 'react-icons/io5';
+import { IoBook as TemplateFilledIcon } from 'react-icons/io5';
 
 const ThemeIcons = {
   MoonIcon,
@@ -54,6 +58,8 @@ const DashboardIcons = {
   ClusterFilledIcon,
   TeamOutline,
   TeamFilled,
+  TemplateOutlineIcon,
+  TemplateFilledIcon,
 };
 
 export {

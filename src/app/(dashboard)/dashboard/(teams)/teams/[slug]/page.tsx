@@ -27,8 +27,6 @@ const TeamPage: React.FC<Params> = async ({ params }) => {
       <section>
         <h1 className="text-xl font-semibold text-primary">{teamData.name}</h1>
         <p className="text-sm text-primary/70">{teamData.description}</p>
-
-        {}
       </section>
     </div>
   );

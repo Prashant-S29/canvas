@@ -10,7 +10,6 @@
 - fix team invitation mail template
 - auth not working n production
 - fix login / signup form
-- add chance role in team member table
 
 
 LATEST
@@ -24,13 +23,8 @@ LATEST
 | delete my account                                          | no     |
 
 
+ - how we will render fields on the certificate; how to get the position of the field
 
-fix this
-Error sending verification email: [Error: Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to
-535 5.7.8  https://support.google.com/mail/?p=BadCredentials 41be03b00d2f7-b26eb084428sm16539512a12.57 - gsmtp] {
-  code: 'EAUTH',
-  response: '535-5.7.8 Username and Password not accepted. For more information, go to\n' +
-    '535 5.7.8  https://support.google.com/mail/?p=BadCredentials 41be03b00d2f7-b26eb084428sm16539512a12.57 - gsmtp',
-  responseCode: 535,
-  command: 'AUTH PLAIN'
-}
+
+ - fix the login flow when going from home to dashboard , not found 
+

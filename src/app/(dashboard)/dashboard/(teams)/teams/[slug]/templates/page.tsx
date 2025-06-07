@@ -1,20 +1,20 @@
 import { headers } from 'next/headers';
-import { AddIcon } from 'public/icons';
 import type React from 'react';
-import { AllProjectsGrid } from '~/components/dashboard/team/common';
-import { ProjectFomDialog } from '~/components/form/project';
-import { Button } from '~/components/ui/button';
+import {
+  AllProjectsGrid,
+  NewTemplateCTA,
+} from '~/components/dashboard/team/common';
 import { auth } from '~/lib/auth';
 import { checkAuth, generateSeo, slugToString } from '~/utils';
 
 export const generateMetadata = () =>
   generateSeo({
-    title: 'Projects',
-    description: 'Projects',
+    title: 'Templates',
+    description: 'Templates',
     url: 'https://canvas.com/settings',
   });
 
-const Projects: React.FC = async () => {
+const Templates: React.FC = async () => {
   await checkAuth({
     redirectTo: '/signup',
     role: ['TEAM_ADMIN', 'TEAM_MEMBER', 'ORG_ADMIN'],
@@ -28,9 +28,9 @@ const Projects: React.FC = async () => {
     <div className="relative min-h-screen w-full pb-5 pt-[100px]">
       <section className="sticky top-0 -mt-4 flex items-center justify-between bg-background py-4">
         <section>
-          <h1 className="text-xl font-semibold">Projects</h1>
+          <h1 className="text-xl font-semibold">Templates</h1>
           <p className="text-sm text-primary/50">
-            These are all the projects you have at{' '}
+            These are all the templates you have at{' '}
             <span className="font-medium">
               {slugToString(session?.session.teamSlug ?? '')}
             </span>
@@ -38,14 +38,7 @@ const Projects: React.FC = async () => {
           </p>
         </section>
 
-        <ProjectFomDialog
-          state="create"
-          trigger={
-            <Button size="smaller" variant="default">
-              <AddIcon /> Create New Project
-            </Button>
-          }
-        />
+        <NewTemplateCTA />
       </section>
 
       <AllProjectsGrid />
@@ -53,4 +46,4 @@ const Projects: React.FC = async () => {
   );
 };
 
-export default Projects;
+export default Templates;

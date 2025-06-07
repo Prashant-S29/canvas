@@ -26,7 +26,7 @@ const Teams: React.FC = async () => {
   await checkAuth({
     redirectTo: '/signup',
     role: ['ORG_ADMIN'],
-    // isOrgDashboard: true,
+    isOrgDashboard: true,
   });
 
   const session = await auth.api.getSession({

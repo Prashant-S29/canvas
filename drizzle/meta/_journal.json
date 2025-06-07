@@ -50,6 +50,34 @@
       "when": 1748101206653,
       "tag": "0006_added_orgSlug_on_team_invitation",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1749158570768,
+      "tag": "0007_chemical_goblin_queen",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1749278612853,
+      "tag": "0008_add_slug_to_project",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1749279881348,
+      "tag": "0009_added_relation_in_project_and_org\n",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1749283514732,
+      "tag": "0010_add_team_slug_to_project",
+      "breakpoints": true
     }
   ]
 }

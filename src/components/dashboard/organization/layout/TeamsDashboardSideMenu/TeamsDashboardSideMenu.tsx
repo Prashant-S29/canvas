@@ -31,7 +31,9 @@ export const TeamsDashboardSideMenu: React.FC = () => {
             className="h-10 w-[200px] justify-start text-left text-[13px]"
           >
             <Link href={`/dashboard/teams/${params.slug}/${data.href}`}>
-              {pathName === data.href ? (
+              {(data.href
+                ? `/dashboard/teams/${params.slug}/${data.href}`
+                : `/dashboard/teams/${params.slug}`) === pathName ? (
                 <data.icon_filled />
               ) : (
                 <data.icon_outline />

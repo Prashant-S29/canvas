@@ -16,6 +16,12 @@ export const SideMenuItems: SideMenuItemProps[] = [
     icon_outline: DashboardIcons.DashboardOutlineIcon,
   },
   {
+    label: 'Templates',
+    href: 'templates',
+    icon_filled: DashboardIcons.TemplateFilledIcon,
+    icon_outline: DashboardIcons.TemplateOutlineIcon,
+  },
+  {
     label: 'Projects',
     href: 'projects',
     icon_filled: DashboardIcons.TeamFilled,

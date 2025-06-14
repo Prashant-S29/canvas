@@ -2,6 +2,7 @@ import { headers } from 'next/headers';
 import type React from 'react';
 import { auth } from '~/lib/auth';
 import { checkAuth, generateSeo, slugToString } from '~/utils';
+import { Test } from './text';
 
 export const generateMetadata = () =>
   generateSeo({
@@ -34,6 +35,8 @@ const Projects: React.FC = async () => {
           </p>
         </section>
       </section>
+
+      <Test />
     </div>
   );
 };

@@ -1,21 +1,17 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import type React from 'react';
+import Link from "next/link";
+import type React from "react";
 
 // components
-import { ThemeToggler } from '~/components/common';
-import { Button } from '~/components/ui/button';
+import { ThemeToggler } from "~/components/common";
+import { Button } from "~/components/ui/button";
 
 // icons
-import { SocialIcons } from 'public/icons';
-import { NavbarUserProfile } from '~/components/common';
-import { Skeleton } from '~/components/ui/skeleton';
-import { useMounted } from '~/hooks';
-import { authClient } from '~/lib/auth-client';
+import { SocialIcons } from "public/icons";
+import { useMounted } from "~/hooks";
 
 export const Header: React.FC = () => {
-  const { data: session, isPending } = authClient.useSession();
 
   const mounted = useMounted();
 
@@ -42,24 +38,11 @@ export const Header: React.FC = () => {
 
       <section className="flex items-center gap-2">
         <ThemeToggler />
-        <Button size="icon" variant="ghost" className="gap-1">
-          <SocialIcons.GitHubIcon />
+        <Button size="icon" variant="ghost" className="gap-1" asChild>
+          <Link href="https://github.com/Prashant-S29/canvas" target="_blank">
+            <SocialIcons.GitHubIcon />
+          </Link>
         </Button>
-        <div className="mx-3 h-3 w-[0.5px] bg-primary/50" />
-
-        {isPending ? (
-          <Skeleton className="h-9 w-[150px] rounded-sm" />
-        ) : (
-          <>
-            {session?.user?.id ? (
-              <NavbarUserProfile />
-            ) : (
-              <Button size="sm" variant="default" asChild>
-                <Link href="/signup">Sign Up</Link>
-              </Button>
-            )}
-          </>
-        )}
       </section>
     </header>
   );

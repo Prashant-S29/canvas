@@ -15,6 +15,8 @@ const createContext = async (req: NextRequest) => {
   });
 };
 
+// api/trpc/team.createNewTeam
+
 const handler = (req: NextRequest) =>
   fetchRequestHandler({
     endpoint: '/api/trpc',

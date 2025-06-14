@@ -5,20 +5,15 @@ import type React from "react";
 
 // components
 import { ThemeToggler } from "~/components/common";
-import { Button } from "~/components/ui/button";
-
-// icons
-import { SocialIcons } from "public/icons";
 import { useMounted } from "~/hooks";
 
 export const Header: React.FC = () => {
-
   const mounted = useMounted();
 
   if (!mounted) return null;
 
   return (
-    <header className="fixed top-0 z-50 flex w-full items-center justify-between px-[200px] py-4">
+    <header className="fixed top-0 z-50 flex w-full items-center justify-between container left-1/2 -translate-x-1/2 p-8">
       <Link href="/" className="flex items-center gap-2 text-sm font-medium">
         <svg
           width="30"
@@ -36,14 +31,7 @@ export const Header: React.FC = () => {
         Canvas
       </Link>
 
-      <section className="flex items-center gap-2">
-        <ThemeToggler />
-        <Button size="icon" variant="ghost" className="gap-1" asChild>
-          <Link href="https://github.com/Prashant-S29/canvas" target="_blank">
-            <SocialIcons.GitHubIcon />
-          </Link>
-        </Button>
-      </section>
+      <ThemeToggler />
     </header>
   );
 };

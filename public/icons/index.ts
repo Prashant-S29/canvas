@@ -1,8 +1,12 @@
 import { FiInfo as InfoIcon } from 'react-icons/fi';
+import { FaStar as StarIcon} from "react-icons/fa";
+
 import { ImSpinner3 as SpinnerIcon } from 'react-icons/im';
 import { IoMdCloseCircle as CloseCircleIcon } from 'react-icons/io';
 import { IoCheckmarkCircle as CheckIcon } from 'react-icons/io5';
 import { IoLogOutOutline as LogoutIcon } from 'react-icons/io5';
+import { FaCheck  as TickIcon} from "react-icons/fa6";
+
 import { IoCloudUpload as UploadIcon } from 'react-icons/io5';
 import { IoAdd as AddIcon } from 'react-icons/io5';
 import { IoArrowForward as RightArrowIcon } from 'react-icons/io5';
@@ -78,4 +82,6 @@ export {
   LeftArrowIcon,
   InfoIcon,
   CopyIcon,
+  StarIcon,
+  TickIcon
 };
